@@ -1,0 +1,240 @@
+<html>
+
+<head>
+  <title>Express</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<body>
+  <div id="navbar">
+    <nav>
+      <a href="#">
+        Sensor Dashboard
+      </a>
+      <div>
+        <ul id="ul1">
+          <li class="nav-li active">
+            <span class="material-symbols-outlined">
+              home
+            </span>
+            <span>Home</span>
+          </li>
+          <li class="nav-li">
+            <span class="material-symbols-outlined">
+              monitoring
+            </span>
+            <span>Monitoring</span>
+          </li>
+          <li class="nav-li">
+            <span class="material-symbols-outlined">
+              info
+            </span>
+            <span>About</span>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div id="main-content" class="box-test" style="display: flex;">
+    <!-- upper -->
+    <div id="upper" class="box-test">
+      <div class="box-test"
+        style="display: flex; flex-direction: row; justify-content: space-between; font-size: 2em; gap: 30px;">
+        <div id="tempinfo" class="box-test envir-info">
+          <div>
+            <span class="material-symbols-outlined">
+              thermostat
+            </span>
+          </div>
+          <div style="display: flex;">
+            <div id="temp"></div>
+            <div>°C</div>
+          </div>
+        </div>
+        <div id="humiinfo" class="box-test envir-info">
+          <div><span class="material-symbols-outlined">
+              humidity_percentage
+            </span></div>
+          <div style="display: flex;">
+            <div id="humi"></div>
+            <div>%</div>
+          </div>
+        </div>
+        <div id="lastinfo" class="box-test envir-info">
+          <div><span class="material-symbols-outlined">
+              update
+            </span></div>
+          <div style="display: flex;">
+            <div id="last">Last update</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- middle -->
+    <div class="box-test" id="left-chart">
+      <div>
+        <canvas id="combine-chart"></canvas>
+      </div>
+    </div>
+    <div class="box-test" id="right-chart">
+      <div>
+        <canvas id="pie-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- lower -->
+  </div>
+  <div class="box-test" id="about">
+    <h6>Made with ❤️ by me</h6>
+  </div>
+
+
+
+  <!-- socket io -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // nav click event 
+    // document.querySelectorAll("#navbar li").forEach(el => {
+    //   el.addEventListener("click", () => {
+    //     el.classList.add("active")
+    //     document.querySelectorAll("#navbar li").forEach(el2 => {
+    //       if (el2 !== el) {
+    //         el2.classList.remove("active")
+    //       }
+    //     })
+    //   })
+    // })
+    let tempData = [];
+    let humiData = [];
+    let timeData = [];
+    //
+    var socket = io();
+    socket.on('connect', function () {
+      console.log('Connected to server');
+    });
+    socket.on('message', (data) => {
+      console.log(data);
+      document.getElementById('temp').innerHTML = data.temp;
+      document.getElementById('humi').innerHTML = data.humi;
+      document.getElementById('last').innerHTML = data.time;
+      combineChart.data.labels.push(data.time);
+      addData(combineChart, [data.temp, data.humi]);
+      if (tempData.length > 10) {
+        removeData(combineChart);
+      }
+    })
+
+    socket.emit('web-get-data', 'get data');
+    socket.on('web-send-data', (data) => {
+      console.log(data);
+      for (let i = data.length - 11; i < data.length; i++) {
+        combineChart.data.labels.push(data[i].time);
+        addData(combineChart, [data[i].temp, data[i].humi]);
+      }
+      for (let i = 0; i < data.length; i++) {
+        tempData.push(data[i].temp);
+        humiData.push(data[i].humi);
+        timeData.push(data[i].time);
+      }
+      if (data.length > 10) {
+        removeData(combineChart);
+      }
+      genChart();
+    })
+
+  </script>
+  <script>
+    //user for pie chart
+    let labelTemp = []
+    //user for pie chart
+    let dataTemp = []
+    // chart.js
+    var ctx = document.getElementById('combine-chart').getContext('2d');
+    var combineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Temperature',
+          data: [],
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 4,
+          fill: false,
+          tension: 0.5
+        }, {
+          label: 'Humidity',
+          data: [],
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 4,
+          fill: false,
+          tension: 0.5
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    function genChart() {
+      tempData.forEach((el, i) => {
+        //labelTemp is an array contain all temperature
+        //dataTemp is count the number of the temperature
+        if (labelTemp.includes(el)) {
+          dataTemp[labelTemp.indexOf(el)] += 1;
+        } else {
+          labelTemp.push(el);
+          dataTemp.push(1);
+        }
+      })
+      console.log(dataTemp);
+      //piechart is use to see the percentage of the temperature. to know which temperature is the most
+      var ctx2 = document.getElementById('pie-chart').getContext('2d');
+      var pieChart = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: labelTemp,
+          datasets: [{
+            label: 'Temperature',
+            data: dataTemp,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.5)',
+              'rgba(255, 206, 86, 0.5)',
+              'rgba(75, 192, 192, 0.5)',
+              'rgba(153, 102, 255, 0.5)',
+              'rgba(255, 159, 64, 0.5)'
+            ],
+            hoverOffset: 10
+          }]
+        }
+      })
+    }
+
+    //update data in chart
+    function addData(chart,/*array*/ newData) {
+      chart.data.datasets.forEach((dataset, i) => {
+        dataset.data.push(newData[i]);
+      });
+      chart.update();
+    }
+    //remove data in chart
+    function removeData(chart) {
+      chart.data.labels.shift();
+      chart.data.datasets.forEach((dataset) => {
+        dataset.data.shift();
+      });
+      chart.update();
+    }
+
+  </script>
+</body>
+
+</html>

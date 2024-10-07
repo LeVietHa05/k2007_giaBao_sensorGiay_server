@@ -1,0 +1,215 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --Grid-columns: 12;
+  --Grid-gutter: 20px;
+  --Grid-columnSpacing: 30px;
+  --Grid-rowSpacing: 30px;
+}
+
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: rgb(255, 244, 234);
+  min-height: 100vh;
+}
+
+a {
+  color: #00b7ff;
+}
+
+#navbar {
+  width: 278px;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+#navbar nav {
+  margin: 30px;
+  border-radius: 20px;
+  background-color: #fff;
+}
+
+nav > a {
+  font: inherit;
+  color: rgb(255, 142, 41);
+  text-decoration: none;
+  position: fixed;
+  z-index: 5;
+  margin: 50px 32.5px 30px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px;
+}
+
+nav > div {
+  display: flex;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  margin-top: 130px;
+  height: 100%;
+  overflow: hidden;
+  width: 218px;
+}
+nav > div > #ul1 {
+  list-style: none;
+  margin: 0px 20px;
+  padding: 10px 0px;
+  position: relative;
+  flex: 1 1 auto;
+  width: 178px;
+}
+
+.nav-li {
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  position: relative;
+  text-decoration: none;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  -webkit-box-align: start;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  color: rgb(111, 117, 126);
+  padding: 8px 10px;
+  gap: 10px;
+}
+
+.nav-li:hover {
+  background-color: rgb(245, 245, 245);
+  opacity: 1.5;
+  cursor: pointer;
+}
+
+.active {
+  background-color: rgb(255, 142, 41);
+  color: rgb(255, 255, 255);
+}
+.active:hover {
+  background-color: rgb(255, 142, 41);
+  opacity: 1.5;
+  cursor: pointer;
+}
+
+#main-content {
+  width: calc(100% - 278px);
+  margin-left: 278px;
+  margin-top: 30px;
+
+  flex-direction: row;
+  min-width: 0px;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: 0px;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  padding-top: 35px;
+  padding-right: 15px;
+  padding-bottom: 0px;
+}
+
+#upper {
+  -webkit-box-flex: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-columns));
+  min-width: 0px;
+  box-sizing: border-box;
+  padding: calc(var(--Grid-rowSpacing) / 2) calc(var(--Grid-columnSpacing) / 2);
+  margin-right: 0px;
+}
+.envir-info {
+  color: rgb(5, 15, 36);
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background-color: rgb(255, 255, 255);
+  overflow: hidden;
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  flex-flow: wrap;
+  -webkit-box-align: center;
+  align-items: center;
+  gap: 20px;
+  box-shadow: rgba(255, 142, 41, 0.1) 0px 0px 4px 0px;
+  width: 100%;
+  height: auto;
+}
+.envir-info span {
+  display: block;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  max-width: 70px;
+  max-height: 70px;
+}
+
+#left-chart {
+  -webkit-box-flex: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  width: calc(100% * 8 / var(--Grid-columns));
+  min-width: 0px;
+  box-sizing: border-box;
+  padding: calc(var(--Grid-rowSpacing) / 2) calc(var(--Grid-columnSpacing) / 2);
+  margin-right: 0px;
+}
+#right-chart {
+  -webkit-box-flex: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  width: calc(100% * 4 / var(--Grid-columns));
+  min-width: 0px;
+  box-sizing: border-box;
+  padding: calc(var(--Grid-rowSpacing) / 2) calc(var(--Grid-columnSpacing) / 2);
+  margin-right: 0px;
+  
+}
+
+#left-chart div {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px;
+  /* min-height: 460px; */
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: rgba(255, 142, 41, 0.1) 0px 0px 4px 0px;
+}
+
+#right-chart div {
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px;
+  height: 100%;
+  box-shadow: rgba(255, 142, 41, 0.1) 0px 0px 4px 0px;
+}
+
+#about {
+  display: flex;
+  flex-direction: row;
+  margin-right: 30px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  justify-content: flex-end;
+  margin-left: 278px;
+}
+
+.box-test {
+  /* border: 1px solid #000; */
+}
