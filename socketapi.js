@@ -33,19 +33,15 @@ io.on("connection", (socket) => {
             clientID: newData.clientID,
             temp: newData.temp,
             humi: newData.humi,
-            time: (new Date()).toLocaleDateString('vi-vn')
+            time: (new Date()).toLocaleString('vi-vn')
         })
+         fs.writeFileSync("data.json", JSON.stringify(data));
     });
 
     socket.on("web-get-data", () => {
         console.log("web-get-data");
         socket.emit("web-send-data", data);
-    })
-
-    socket.on("message", (data) => {
-        console.log(`[message] from ${data.clientID} via socket id: ${socket.id}`);
-        socket.broadcast.emit("message", data);
-    })
+    });
     /**************************** */
     //xu ly chung
     socket.on("reconnect", function () {

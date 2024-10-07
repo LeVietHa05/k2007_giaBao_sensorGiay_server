@@ -53,5 +53,17 @@
         "temp": 29,
         "humi": 90,
         "time": "18:20"
+    },
+    {
+        "clientID": "test",
+        "temp": 30,
+        "humi": 80,
+        "time": "7/10/2024"
+    },
+    {
+        "clientID": "test",
+        "temp": 30,
+        "humi": 80,
+        "time": "16:35:27 7/10/2024"
     }
 ]

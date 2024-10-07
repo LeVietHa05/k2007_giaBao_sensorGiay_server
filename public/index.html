@@ -123,9 +123,11 @@
       document.getElementById('last').innerHTML = data.time;
       combineChart.data.labels.push(data.time);
       addData(combineChart, [data.temp, data.humi]);
-      if (tempData.length > 10) {
+      if (combineChart.data.labels.length > 10) {
+        combineChart.data.labels.shift();
         removeData(combineChart);
       }
+      combineChart.update();
     })
 
     socket.emit('web-get-data', 'get data');
@@ -141,9 +143,11 @@
         timeData.push(data[i].time);
       }
       if (data.length > 10) {
+        combineChart.data.labels.shift();
         removeData(combineChart);
       }
       genChart();
+      combineChart.update();
     })
 
   </script>
@@ -227,7 +231,6 @@
     }
     //remove data in chart
     function removeData(chart) {
-      chart.data.labels.shift();
       chart.data.datasets.forEach((dataset) => {
         dataset.data.shift();
       });
