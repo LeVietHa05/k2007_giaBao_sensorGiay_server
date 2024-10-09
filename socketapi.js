@@ -28,14 +28,19 @@ io.on("connection", (socket) => {
         socket.request.connection.remoteAddress);
     socket.on("message", async (newData) => {
         console.log(`[message] from ${newData.clientID} via socket id: ${socket.id}`);
-        socket.broadcast.emit("message", { ...newData, time: (new Date()).toLocaleDateString('vi-vn') });
+        socket.broadcast.emit("message", {
+            clientID: newData.clientID,
+            temp: newData.temp.toFixed(2),
+            humi: newData.humi.toFixed(2),
+            time: (new Date()).toLocaleString('vi-vn')
+        });
         data.push({
             clientID: newData.clientID,
-            temp: newData.temp,
-            humi: newData.humi,
+            temp: newData.temp.toFixed(2),
+            humi: newData.humi.toFixed(2),
             time: (new Date()).toLocaleString('vi-vn')
         })
-         fs.writeFileSync("data.json", JSON.stringify(data));
+        fs.writeFileSync("data.json", JSON.stringify(data));
     });
 
     socket.on("web-get-data", () => {
